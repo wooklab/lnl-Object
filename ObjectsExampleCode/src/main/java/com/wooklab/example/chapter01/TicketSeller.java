@@ -13,6 +13,6 @@ public class TicketSeller {
     }
 
     public void sellTo(Audience audience) {
-        ticketOffice.plusAmount(audience.buy(ticketOffice.getTickets()));
+        ticketOffice.sellTicketTo(audience);
     }
 }
