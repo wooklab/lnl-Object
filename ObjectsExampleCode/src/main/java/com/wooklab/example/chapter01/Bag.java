@@ -1,4 +1,4 @@
-package com.wooklab.example.chapter01.step01;
+package com.wooklab.example.chapter01;
 
 /**
  * 관람객 소지품을 보관할 가방

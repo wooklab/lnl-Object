@@ -1,4 +1,4 @@
-package com.wooklab.example.chapter01.step01;
+package com.wooklab.example.chapter01;
 
 /**
  * 소극장

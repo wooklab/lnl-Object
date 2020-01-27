@@ -1,4 +1,4 @@
-package com.wooklab.example.chapter01.step01;
+package com.wooklab.example.chapter01;
 
 /**
  * 공연을 관람하기 위한 티켓
