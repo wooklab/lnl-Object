@@ -1,6 +1,7 @@
 package com.wooklab.example.chapter01;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -12,9 +13,9 @@ public class TicketOffice {
     /** 판매하거나 교환해 줄 티켓의 목록 */
     private List<Ticket> tickets = new ArrayList<>();
 
-    public TicketOffice(Long amount, List<Ticket> tickets) {
+    public TicketOffice(Long amount, Ticket ... tickets) {
         this.amount = amount;
-        this.tickets = tickets;
+        this.tickets.addAll(Arrays.asList(tickets));
     }
 
     public void sellTicketTo(Audience audience) {
