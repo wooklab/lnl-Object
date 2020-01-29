@@ -1,4 +1,7 @@
-package com.wooklab.example.chapter02;
+package com.wooklab.example.chapter02.discount;
+
+import com.wooklab.example.chapter02.Money;
+import com.wooklab.example.chapter02.Screening;
 
 import java.util.ArrayList;
 import java.util.Arrays;
