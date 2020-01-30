@@ -152,8 +152,52 @@ public class Screening {
 
 #### 할인 정책과 할인 조건
 
+> 할인 정책은 '금액 할인 정책'과 '비율 할인 정책'으로 구분<br/>
+> 두 클래스는 대부분의 코드가 유사, 할인 요금을 계산하는 방식만 다름
+
+- 부모 클래스인 DiscountPolicy안에 중복코드를 두고 
+- AmountDiscountPolicy와 PercentDiscountPolicy가 부모 클래스를 상속
+- DiscountPolicy의 인스턴스를 생성할 필요가 없기 때문에 추상화 클래스(abstract class)로 구현
+    -  [DiscountPolicy](../ObjectsExampleCode/src/main/java/com/wooklab/example/chapter02/discount/DiscountPolicy.java)
+    -  [AmountDiscountPolicy](../ObjectsExampleCode/src/main/java/com/wooklab/example/chapter02/discount/impl/AmountDiscountPolicy.java)
+    -  [PercentDiscountPolicy](../ObjectsExampleCode/src/main/java/com/wooklab/example/chapter02/discount/impl/PercentDiscountPolicy.java)
+
+> 이와 같이 부모 클래스에 기본적인 알고리즘을 구현하고 중간에 필요한 처리를 자식 클래스에게 위임하는 디자인 패턴을 Template Method 패턴이라 함
+
+- 오버라이딩(overriding) Vs. 오버로딩(overloading)
+    - 오버라이딩
+        - 부모 클래스에 정의된 같은 이름, 같은 파라미터 목록을 가진 메서드를 자식 클래스에서 재정의
+        - 외부에서는 부모 클래스의 메서드가 보이지 않음
+    - 오버로딩
+        - 메서드의 이름은 같지만 제공되는 파라미터 목록이 다름
+        - 부모와 자식 클래스의 메소드가 공존
+
+<br/>
 
 #### 할인 정책 구성하기
+
+> 하나의 영화에 대해 <br/>
+> 단 하나의 할인 정책만 설정할 수 있지만 <br/>
+> 할인 조건의 경우에는 여러 개를 적용할 수 있다.
+
+- 오직 하나의 DiscountPolicy 인스턴스만 받을 수 있도록 선언
+    ```java
+    public class Movie {
+        public Movie(String title, Duration runningTime, Money fee, DiscountPolicy discountPolicy) {
+        // ...
+        this.discountPolicy = discountPolicy;
+        }
+    }
+    ```
+- DiscountPolicy의 생성자는 여러 개의 DiscountCondition 인스턴스를 허용
+    ```java
+    public abstract class DiscountPolicy {
+        public DiscountPolicy(DiscountCondition ... conditions) {
+            this.conditions = conditions;
+        }
+    }
+    ```
+=> 생성자의 파라미터 목록을 이용해 **초기화에 필요한 정보를 전달하도록 강제**하면 올바른 상태를 가진 객체의 생성을 보장
 
 
 ---
@@ -162,13 +206,71 @@ public class Screening {
 
 #### 컴파일 시간 의존성과 실행 시간 의존성
 
+- [Movie](../ObjectsExampleCode/src/main/java/com/wooklab/example/chapter02/Movie.java)
+- [DiscountPolicy](../ObjectsExampleCode/src/main/java/com/wooklab/example/chapter02/discount/DiscountPolicy.java)
+- [AmountDiscountPolicy](../ObjectsExampleCode/src/main/java/com/wooklab/example/chapter02/discount/impl/AmountDiscountPolicy.java)
+- [PercentDiscountPolicy](../ObjectsExampleCode/src/main/java/com/wooklab/example/chapter02/discount/impl/PercentDiscountPolicy.java)
+> 코드 수준에서는 Movie 클래스가 추상 클래스인 DiscountPolicy에만 의존 <br/>
+> 그러나 실행시점에는 AmountDiscountPolicy나 PercentDiscountPolicy의 인스턴스에 의존 <br/>
+> => 즉 코드의 의존성과 실행 시점의 의존성이 서로 다를 수 있다.
+- 코드의 의존성과 실행 시점의 의존성이 서로 다르면
+    - 장점: 코드는 더 유연해지고 확장이 가능
+    - 단점: 코드를 이해하기 어려워짐
+- 의존성의 양면성은 설계가 트레이드오프의 산물
+    - 훌륭한 객체지향 설계자로 성장하기 위해서는 항상 유연성과 가독성 사이에서 고민해야 하며
+    - 무조건 유연한 설계도, 무조건 읽기 쉬운 코드도 정답이 아니다.
+
+<br/>
+
 #### 차이에 의한 프로그래밍
+
+> 클래스를 하나 추가하고 싶은데 그 클래스가 기존의 어떤 클래스와 매우 흡사하다고 가정
+
+- 상속
+    - 클래스의 코드를 전혀 수정하지 않고도 재사용하는 것
+    - 클래스 사이에 관계를 설정하는 것만으로 기존 클래스가 가지고 있는 모든 속성과 행동을 새로운 클래스에 포함
+    - 기존 클래스를 기반으로 새로운 클래스를 쉽고 빠르게 추가할 수 잇는 간편한 방법을 제공
+    - 부모 클래스의 구현은 공유하면서도 행동이 다른 자식 클래스를 쉽게 추가
+
+<br/>
 
 #### 상속과 인터페이스
 
+- 인터페이스: 객체가 이해할 수 있는 메시지의 목록을 정의
+- 상속
+    - 자식 클래스는 자신의 인터페이스에 부모 클래스의 인터페이스를 포함
+    - 부모 클래스가 수신할 수 있는 모든 메시지 수신 가능
+    - 때문에 외부 객체는 자식 클래스를 부모 클래스와 동일한 타입으로 간주
+- 즉 자식 클래스는 상속을 통해 부모 클래스의 인터페이스를 물려받기 때문에 부모 클래스 대신 사용 가능
+- 업캐스팅(upcasting): 자식 클래스가 부모 클래스를 대신하는 것
+
+<br/>
+
 #### 다형성
 
+- 다형성이란?
+    - 객체지향 프로그램의 컴파일 시간 의존성과 실행 시간 의존성이 다를 수 있다는 사실 기반
+    - 컴파일 시간 의존성과 실행 시간 의존성을 다르게 만들수 있는 객체지향의 특성을 이용해 서로 다른 메서드를 실행
+    - 동일한 메시지를 수신했을 때 객체의 타입에 따라 다르게 응답할 수 있는 능력
+- 다형성을 구현
+    - 메시지에 응답하기 위해 실행될 메서드를 컴파일 시점이 아닌 실행 시점에 결정
+    - 즉 지연 바인딩(lazy binding) 또는 동적 바인딩(dynamic binding)
+- 다형성과 반대(전통적인 함수 호출)
+    - 반대로 컴파일 시점에 실행될 함수나 프로시저를 결정하는 것
+    - 초기 바인딩(early binding) 또는 정적 바인딩(static binding)
+- 상속은 구현 상속이 아니라 인터페이스 상속을 사용
+    - 구현 상속(implementation inheritance)
+        - 서브클래싱(subclassing)
+        - 코드를 재사용하기 위한 목적
+    - 인터페이스 상속(interface inheritance)
+        - 서브타이핑(subtyping)
+        - 다형적인 협력을 위해 부모 클래스와 자식 클래스가 인터페이스를 공유
+
+<br/>
+
 #### 인터페이스와 다형성
+- 자바의 인터페이스: 구현에 대한 고려 없이 다형적인 협력에 참여하는 클래스들이 공유 가능한 외부 인터페이스를 정의한 것
+- 인터페이스를 실체화 하는 클래스들은 동일한 인터페이스를 공유
 
 
 ---
@@ -177,12 +279,61 @@ public class Screening {
 
 #### 추상화의 힘
 
+- 추상 클래스(abstract class) Vs. 자바 인터페이스(interface)
+    - 공통점: 클래스들이 공통으로 가질 수 있는 인터페이스를 정의
+    - 차이점
+        - 추상 클래스: 구현의 일부를 자식 클래스가 결정
+        - 자바 인터페이스: 구현의 전체를 자식 클래스가 결정
+- 추상화 장점
+    - 추상화 계층만 따로 떼어 놓고 살펴보면 요구사항의 정책을 높은 수준에서 서술 가능
+    - 유연한 설계
+
+<br/>
+
 #### 유연한 설계
+
+- 항상 예외 케이스를 최소화하고 일관성을 유지할 수 있는 방법을 선택
+- 추상화를 중심으로 코드의 구조를 설계 -> 유연하고 확장 가능
+- 추상화 -> 특정 조건에 묶이지 않고 어떤 클래스와도 협력 가능
+- 즉 유연성이 필요한 곳에 추상화를 사용하라
+
+<br/>
 
 #### 추상 클래스와 인터페이스 트레이드오프
 
+> 자식 클래스인 NonDiscountPolicy 객체의(할인 조건이 없을) 경우, 부모 클래스인 DiscountPolicy의 getDiscountAmount() 메서드를 호출하지 않는 경우 발생
+- DiscountPolicy를 (기존 추상 클래스에서) 인터페이스로 바꾸고
+- getDiscountAmount() 메서드가 아닌 calculateDiscountAmount() 오퍼레이션을 오버라이딩 하도록 변경
+    - DiscountPolicy: 추상 클래스 -> 자바 인터페이스
+    - 인터페이스 메서드의 변경: getDiscountAmount() -> calculateDiscountAmount()
+    - DefaultDiscountPolicy 추상 클래스를 추가: calculateDiscountAmount() 구현
+    - 기존 정책 클래스: getDiscountAmount() 구현
+
+<br/>
+
 #### 코드 재사용
+
+- 코드 재사용을 위해 상속보다는 합성(composition)
+- 합성은 다른 객체의 인스턴스를 자신의 인스턴스 변수로 포함해서 재사용 하는 방법
+
+<br/>
 
 #### 상속
 
+- 상속은 캡슐화를 위반한다
+    - 부모 클래스의 구현이 자식 클래스에게 노출되기 때문에 캐슐화 약화
+    - 자식 클래스가 부모 클래스에 강하게 결합되도록 만들기 때문에 상속을 과도하게 사용한 코드는 변경이 어려움
+- 상속은 설계가 유연하지 않음
+    - 부모 클래스와 자식 클래스 사이의 관계를 컴파일 시점에 결정
+    - 실행 시점에 객체의 종류를 변경하는 것이 불가능
+
+<br/>
+
 #### 합성
+
+> 인터페이스에 정의된 메시지를 통해서만 코드를 재사용하는 방법
+
+- 객체지향에서 가장 중요한 것
+    - 애플리케이션의 기능을 구현하기 위해 협력에 참여하는 객체들 사이의 상호작용
+    - 객체들은 협력에 참여하기 위해 역할을 부여받고 역할에 적합한 책임을 수행
+    - 적절한 협력을 식별하고 협력에 필요한 역할을 정의한 후에 역할을 수행할 수 있는 적절한 객체에게 적절한 책임을 할당하는 것
