@@ -3,9 +3,9 @@ package com.wooklab.example.chapter02.discount.impl;
 import com.wooklab.example.chapter02.Money;
 import com.wooklab.example.chapter02.Screening;
 import com.wooklab.example.chapter02.discount.DiscountCondition;
-import com.wooklab.example.chapter02.discount.DiscountPolicy;
+import com.wooklab.example.chapter02.discount.DefaultDiscountPolicy;
 
-public class PercentDiscountPolicy extends DiscountPolicy {
+public class PercentDiscountPolicy extends DefaultDiscountPolicy {
     private double percent;
 
     public PercentDiscountPolicy(double percent, DiscountCondition... conditions) {

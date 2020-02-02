@@ -4,9 +4,9 @@ import com.wooklab.example.chapter02.Money;
 import com.wooklab.example.chapter02.Screening;
 import com.wooklab.example.chapter02.discount.DiscountPolicy;
 
-public class NoneDiscountPolicy extends DiscountPolicy {
+public class NoneDiscountPolicy implements DiscountPolicy {
     @Override
-    protected Money getDiscountAmount(Screening screening) {
+    public Money calculateDiscountAmount(Screening screening) {
         return Money.ZERO;
     }
 }
