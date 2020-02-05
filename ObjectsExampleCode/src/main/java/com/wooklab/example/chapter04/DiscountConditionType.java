@@ -1,4 +1,4 @@
-package com.wooklab.example.chapter03;
+package com.wooklab.example.chapter04;
 
 public enum DiscountConditionType {
     SEQUENCE,       // 순번조건

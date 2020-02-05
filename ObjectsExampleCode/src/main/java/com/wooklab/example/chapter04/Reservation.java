@@ -1,4 +1,4 @@
-package com.wooklab.example.chapter03;
+package com.wooklab.example.chapter04;
 
 public class Reservation {
     private Customer customer;

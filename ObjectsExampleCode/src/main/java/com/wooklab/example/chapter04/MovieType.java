@@ -1,4 +1,4 @@
-package com.wooklab.example.chapter03;
+package com.wooklab.example.chapter04;
 
 public enum MovieType {
     AMOUNT_DISCOUNT,    // 금액 할인 정책
