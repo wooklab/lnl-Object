@@ -137,3 +137,180 @@ public class Movie {
 ---
 
 ### 03 데이터 중심의 영화 예메 시스템의 문제점
+- 데이터 중심의 설계는 캡슐화를 위반하고 **객체의 내부 구현을 인터페이스의 일부로 만들고**
+- 반면 책임 중심의 설계는 **객체의 내부 구현을 안정적인 인터페이스 뒤로 캡슐화**
+
+- 데이터 중심의 설계가 가진 대표적인 문제점
+    - 캡슐화 위반
+    - 높은 결합도
+    - 낮은 응집도
+
+<br/>
+
+#### 캡슐화 위반
+
+데이터 중심으로 설계한 Movie 클래스
+```java
+public class Movie {
+    private Monecy fee;
+
+    public Money getFee() {
+        return fee;
+    }
+
+    public void setFee(Money fee) {
+        this.fee = fee;
+    }
+}
+```
+> 오직 메서드를 통해서만 객체의 내부 상태에 접근 <br/>
+> 그러나 객체 내부의 변수가 존재한다는 사실이 퍼블릭 인터페이스에 나타나기 때문에 캡슐화된 것은 아니다
+
+- 추측에 의한 설계 전략(design-by-guessing strategy)<br/>
+    - 접근자와 수정자에 과도하게 존하는 설계 방식<br/>
+    - 막연한 추측을 기반으로 설계<br/>
+    - 캡슐화의 원칙을 위반하는 변경에 취약한 설계
+
+<br/>
+
+#### 높은 결합도
+
+> 객체 내부의 구현이 객체의 인터페이스에 드러난다는 것은 **클라이언트가 구현에 강하게 결합**된다는 것을 의미<br/>
+> (객체 내부 구현을 변경 -> 인터페이스에 의존하는 모든 클라이언트들도 변경)
+
+- 데이터 중심 설계는 
+    - 객체의 캡슐화를 약화시키기 때문에 클라이언트가 객체의 구현에 강하게 결합
+    - 여러 데이터 객체들을 사용하는 제어 로직이 특정 객체 안에 집중되기 때문에 **하나의 제어 객체가 다수의 객체에 강하게 결합**되는 단점
+    - 이 결합도로 인해 어떤 데이터 객체를 변경하더라도 **제어 객체를 함께 변경**
+    - 전체 시스템을 하나의 거대한 의존성 덩어리로 만들어 버림
+        - 때문에 어떤 변경이라도 일단 발생하고나면 시스템 전체 영향
+
+<br/>
+
+#### 낮은 응집도
+
+> 서로 다른 이유로 변경되는 코드가 하나의 모듈 안에 공존할 때 모듈의 응집도가 낮다고 말한다.
+
+- 낮은 응집도는 두 가지 측면에서 설계에 문제
+    - 변경과 아무 상관이 없는 코드들이 영향
+    - 하나의 요구사항 변경을 반영하기 위해 동시에 여러 모듈을 수정
+- 설계의 응집도가 낮다는 증거
+    - 어떤 요구사항 변경을 수용하기 위해 하나 이상의 클래스를 수정해야 할 경우
+
+#### 단일 책임 원칙(Single Responsibility Principle, SRP)
+- 클래스는 단 한 가지의 변경 이유만 가져야 한다
+- 클래스의 응집도를 높일 수 있는 설계의 원칙
+- 단일 책임 원칙에서의 `책임`은 역할, 책임, 협력에서의 책임이 아닌 `변경(변경의 이유)`과 관련된 더 큰 개념을 가리킴
+
+
+---
+
+### 04 자율적인 객체를 통해
+
+#### 캡슐화를 지켜라
+
+- 객체는 자신이 어떤 데이터를 가지고 있는지를 내부에 캡슐화하고 외부에 공개해서는 안됨
+- 객체는 스스로의 상태를 책임져야 하며 외부에서는 인터페이스에 정의된 메서드를 통해서만 상태에 접근
+- 객체에게 의미 있는 메서드는 객체가 책임져야 하는 무언가를 수행하는 메서드
+- 속성이 가시성을 private으로 설정했다고 해도
+    - 접근자와 수정자를 통해 속성을 외부로 제공하고 있다면 `캡슐화 위반`
+
+사각형을 표현하는 Rectangle 클래스
+```java
+class Rectangle {
+    private int left;
+    private int top;
+    private int right;
+    private int bottom;
+
+    public Rectangle(int left, int top, int right, int bottom) {
+        this.left = left;
+        this.top = top;
+        this.right = right;
+        this.bottom = bottom;
+    }
+
+    // 이하 getter, setter 생략...
+}
+```
+- 이 코드의 문제점
+    - '코드 중복'이 발생할 확률이 높다
+    - '변경에 취약'하다
+- Rectangle 내부에 너비와 높이를 조절하는 로직을 캡슐화하면 문제 해결
+```java
+class Rectangle {
+    public void enlarge(int multiple) {
+        right *= multiple;
+        bottom *= multiple;
+    }
+}
+```
+- 변경하는 주체를 외부 객체에서 Rectangle 내부로 이동
+- Rectangle 스스로 증가시키도록 `'책임을 이동'` 시킴
+
+<br/>
+
+#### 스스로 자신의 데이터를 책임지는 객체
+- 객체 내부에 저장되는 데이터보다 객체가 협력에 참여하면서 수행할 책임을 정의하는 오퍼레이션이 더 중요
+- 객체를 설계할 때 다음과 같은 두 질문을 하자
+    1. 이 객체가 어떤 데이터를 포함해야 하는가? `(질문1)`
+    2. 이 객체가 데이터에 대해 수행해야 하는 오퍼레이션은 무엇인가? `(질문2)`
+- 위 질문을 조합하면 객체의 내부 상태를 저장하는 방식과 저장된 상태에 대해 호출할 수 있는 오퍼레이션의 집합을 얻을 수 있음
+
+> DiscountCondition 클래스
+```java
+public class DiscountCondition {
+    private DiscountConditionType type;
+    private int sequence;
+    private DayOfWeek dayOfWeek;
+    private LocalTime startTime;
+    private LocalTime endTime;
+}
+```
+- `질문1.` 할인 조건 유형과 유형에 따라 필요한 데이터<br/>
+- `질문2.` 할인 조건에는 순서 조건과 기간 조건의 두 가지 종류가 존재<br/>
+    - 즉, 두 가지 할인 조건을 판단할 수 있는 두 개의 isDiscountable 메서드 필요
+
+> Movie 클래스
+```java
+public class Movie {
+    private String title;
+    private String Duration runningTime;
+    private Money fee;
+    private List<DiscountCondition> discountConditions;
+
+    private MovieType movieType;
+    private Money discountAmount;
+    private double discountPercent;
+}
+```
+- `질문1.` 영화 제목, 시간, 요금, 할인조건 등
+- `질문2.` 영화 요금을 계산하는 오퍼레이션과 할인여부를 판단하는 오퍼레이션 
+필요
+    - 요금을 계산하기 위해서는 할인 정책을 염두
+    - 할인 정책에는 금액 할인, 비율 할인, 할인 미적용 세가지 타입 존재
+    - 할인 정책의 타입을 반환하는 getMovieType 메서드와 정책별로 요금을 계산하는 세 가지 메서드 구현해야함
+    - DiscountCondition의 목록을 포함하기 떄문에, 할인 여부를 판단하는 오퍼레이션 isDiscountable 메서드 필요
+
+=> 이러한 과정을 통해 결합도 측면에서 ReservationAgency에 몰려있던 의존성이 개선<br/>
+=> 기존 설계보다 내부 구현을 더 면밀하게 캡슐화하고 있기 때문
+
+---
+
+### 05 하지만 여전히 부족하다
+
+#### 캡슐화 위반
+
+#### 높은 결합도
+
+#### 낮은 응집도
+
+
+---
+
+### 06 데이터 중심 설계의 문제점
+
+#### 데이터 중심 설계는 객체의 행동보다는 상태에 초점을 맞춘다
+
+#### 데이터 중심의 설계는 객체를 고립시킨 채 오퍼레이션을 정의하도록 만든다
+
