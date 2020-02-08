@@ -48,6 +48,7 @@ public class Movie {
     private DiscountPolicy discountPolicy;
 }
 ```
+
 TO-BE: 데이터(상태) 중심
 ```java
 public class Movie {
@@ -138,7 +139,6 @@ public class Movie {
 ### 03 데이터 중심의 영화 예메 시스템의 문제점
 - 데이터 중심의 설계는 캡슐화를 위반하고 **객체의 내부 구현을 인터페이스의 일부로 만들고**
 - 반면 책임 중심의 설계는 **객체의 내부 구현을 안정적인 인터페이스 뒤로 캡슐화**
-
 - 데이터 중심의 설계가 가진 대표적인 문제점
     - 캡슐화 위반
     - 높은 결합도
@@ -214,7 +214,7 @@ public class Movie {
 - 속성이 가시성을 private으로 설정했다고 해도
     - 접근자와 수정자를 통해 속성을 외부로 제공하고 있다면 `캡슐화 위반`
 
-사각형을 표현하는 Rectangle 클래스
+> 사각형을 표현하는 Rectangle 클래스
 ```java
 class Rectangle {
     private int left;
@@ -293,6 +293,7 @@ public class Movie {
 
 => 이러한 과정을 통해 결합도 측면에서 ReservationAgency에 몰려있던 의존성이 개선<br/>
 => 기존 설계보다 내부 구현을 더 면밀하게 캡슐화하고 있기 때문
+
 
 ---
 
