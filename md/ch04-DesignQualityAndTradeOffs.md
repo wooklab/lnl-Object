@@ -301,16 +301,69 @@ public class Movie {
 
 #### 캡슐화 위반
 
+> 분명히 수정된 객체들은 자기 자신의 데이터를 스스로 처리한다
+```java
+public class DiscountCondition {
+    private DiscountConditionType type;
+    private int sequence;
+    private DayOfWeek dayOfWeek;
+    private LocalTime startTime;
+    private LocalTime endTime;
+
+    public DiscountConditionType getType() { ... }
+
+    public boolean isDiscountable(DayOfWeek dayOfWeek, LocalTime time) { ... }
+
+    public boolean isDiscountable(int sequence) { ... }
+```
+}
+- isDiscountable(DayOfWeek dayOfWeek, LocalTime time) 메서드
+    - 객체 내부에 DayOfWeek 타입의 요일과 LocalTime 타입의 시간 정보가 인스턴스 변수로 포함돼 있다는 사실을 인터페이스를 통해 외부에 노출
+- isDiscountable(int sequence) 메서드
+    - int 타입의 순번 정보를 포함하고 있음을 외부에 노출
+- getType() 메서드
+    - setType 메서드는 없지만 내부에 DiscountConditionType을 포함하고 있음을 외부에 노출
+
+> 내부 구현의 변경이 외부로 퍼져나가는 파급 효과(ripple effect)는 캡슐화가 부족하다는명백한 증거
+
+<br/>
+
 #### 높은 결합도
+
+- 캡슐화 위반으로 인해 DiscountCondition의 내부 구현이 외부로 노출
+- Movie와 DiscountCondition 사이의 결합도는 높을 수 밖에 없음
+- 모든 문제의 원인은 캡슐화 원칙을 지키지 않았기 때문
+- DiscountCondition의 내부 구현을 제대로 캡슐화하지 못했기 떄문에 DiscountCondition에 의존하는 Movie와의 결합도도 함께 높아진 것
+
+<br/>
 
 #### 낮은 응집도
 
+- 결과적으로 할인 조건의 종류를 변경하기 위해서는 DiscountCondition, Movie 그리고 Movie를 사용하는 Screening을 함께 수정해야 함
+- 하나의 변경을 수용하기 위해 코드의 여러 곳을 동시에 변경해야 한다는 것은 설계의 응집도가 낮다는 증거(이유는 캡슐화를 위반했기 때문)
 
 ---
 
 ### 06 데이터 중심 설계의 문제점
+ - 데이터 중심의 설계가 변경에 취약한 이유
+    1. 너무 이른 시기에 데이터에 관해 결정하도록 강요
+    2. 협력이라는 문맥을 고려하지 않고 객체를 고립시킨 채 오퍼레이션 결정
+
+<br/>
 
 #### 데이터 중심 설계는 객체의 행동보다는 상태에 초점을 맞춘다
 
+- 데이터 중심 설계 방식에 익숙한 개발자들은 일반적으로 데이터와 기능을 분리하는 절차적 프로그래밍 방식에 따름 (객체 지향에 반하는 것)
+- 데이터에 관한 지식이 객체의 인터페이스에 고스란히 드러남
+- 너무 이른 시기에 데이터에 대해 고민하기 때문에 캡슐화에 실패
+
+<br/>
+
 #### 데이터 중심의 설계는 객체를 고립시킨 채 오퍼레이션을 정의하도록 만든다
 
+- 객체의 구현이 이미 결정된 상태에서 다른 객체와 협력 방법을 고민하기 때문에 이미 구현된 객체의 인터페이스를 억지로 끼워맞춤
+- 객체의 인터페이스에 구현이 노출
+- 협력이 구현 세부사항에 종속
+- 객체의 내부 구현이 변경됐을 때 협력하는 객체 모두가 영향 받음
+
+> 올바른 객체지향 설계의 무게 중심은 항상 객체의 내부가 아니라 외부에 맞춰져 있어야 한다.
