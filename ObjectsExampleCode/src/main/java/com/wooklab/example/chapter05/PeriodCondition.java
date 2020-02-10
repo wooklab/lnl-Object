@@ -3,7 +3,7 @@ package com.wooklab.example.chapter05;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 
-public class PeriodCondition {
+public class PeriodCondition implements DiscountCondition {
     private DayOfWeek dayOfWeek;
     private LocalTime startTime;
     private LocalTime endTime;
@@ -14,9 +14,10 @@ public class PeriodCondition {
         this.endTime = endTime;
     }
 
+    @Override
     public boolean isSatisfiedBy(Screening screening) {
         return dayOfWeek.equals(screening.getWhenScreened().getDayOfWeek()) &&
-                startTime.compareTo(screening.getWhenScreened().toLocalTime()) <= 0 &&
+                startTime.compareTo(screening.getWhenScreened().toLocalTime()) <= 0&&
                 endTime.compareTo(screening.getWhenScreened().toLocalTime()) >= 0;
     }
 }
