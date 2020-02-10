@@ -4,7 +4,7 @@ import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class Movie {
+public class Movie {
     private String title;
     private Duration runningTime;
     private Money fee;
