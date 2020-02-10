@@ -1,7 +1,7 @@
 package com.wooklab.example.chapter05;
 
 import java.time.Duration;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public abstract class Movie {
@@ -10,29 +10,48 @@ public abstract class Movie {
     private Money fee;
     private List<DiscountCondition> discountConditions;
 
-    public Movie(String title, Duration runningTime, Money fee, DiscountCondition... discountConditions) {
-        this.title = title;
-        this.runningTime = runningTime;
+    private MovieType movieType;
+    private Money discountAmount;
+    private double discountPercent;
+
+    public MovieType getMovieType() {
+        return movieType;
+    }
+
+    public void setMovieType(MovieType movieType) {
+        this.movieType = movieType;
+    }
+
+    public Money getFee() {
+        return fee;
+    }
+
+    public void setFee(Money fee) {
         this.fee = fee;
-        this.discountConditions = Arrays.asList(discountConditions);
     }
 
-    public Money calculateMovieFee(Screening screening) {
-        if (isDiscountable(screening)) {
-            return fee.minus(calculateDiscountAmount());
-        }
-
-        return fee;
+    public List<DiscountCondition> getDiscountConditions() {
+        return Collections.unmodifiableList(discountConditions);
     }
 
-    private boolean isDiscountable(Screening screening) {
-        return discountConditions.stream()
-                .anyMatch(condition -> condition.isSatisfiedBy(screening));
+    public void setDiscountConditions(
+            List<DiscountCondition> discountConditions) {
+        this.discountConditions = discountConditions;
     }
 
-    protected Money getFee() {
-        return fee;
+    public Money getDiscountAmount() {
+        return discountAmount;
     }
 
-    abstract protected Money calculateDiscountAmount();
+    public void setDiscountAmount(Money discountAmount) {
+        this.discountAmount = discountAmount;
+    }
+
+    public double getDiscountPercent() {
+        return discountPercent;
+    }
+
+    public void setDiscountPercent(double discountPercent) {
+        this.discountPercent = discountPercent;
+    }
 }
