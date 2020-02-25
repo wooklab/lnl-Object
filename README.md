@@ -10,3 +10,4 @@
 - [Chapter04. 설계 품질과 트레이드 오프](md/ch04-DesignQualityAndTradeOffs.md)
 - [Chapter05. 책임 할당하기](md/ch05-AssignResponsibilities.md)
 - [Chapter06. 메시지와 인터페이스](md/ch06-MessagesAndInterface.md)
+- [Chapter07. 객체 분해](md/ch07-ObjectDecomposition.md)
