@@ -142,7 +142,7 @@ public class Screening {
 #### 할인 요금 계산을 위한 협력 시작하기
 
 - [Movie](../ObjectsExampleCode/src/main/java/com/wooklab/example/chapter02/Movie.java)
-> 어떤 할인 정책을 사용할 것이닞 결정하는 코드가 어디에도 존재하지 않음<br/>
+> 어떤 할인 정책을 사용할 것인지 결정하는 코드가 어디에도 존재하지 않음<br/>
 > 단지 discountPolicy에게 메시지를 전송할 뿐
 - 객체지향의 두 개념
     - 상속(inheritance)
